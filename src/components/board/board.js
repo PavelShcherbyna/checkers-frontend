@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
-import classN from 'classnames'
-import './tablecontainer.scss'
-class TableContainer extends Component {
+import classN from 'classnames';
+import {Grid} from "@mui/material";
+
+import './board.scss';
+
+class Board extends Component {
     state = {
         board: [
             [0, 0, 0, 0, 0, 0, 0, 0],
@@ -36,14 +39,15 @@ class TableContainer extends Component {
     }
     render() {
         return (
-            <div className={'board'}>
+
+            <Grid container className={'board'}>
                 {
                     this.state.board.map((arrRow, indexRow) => {
-                        return (<div key={indexRow} className={'row'}>
+                        return (<Grid xs={12} item key={indexRow} className={'row'}>
                             {
                                 arrRow.map((itemCell, indexCell) => {
                                     return(
-                                        <div
+                                        <Grid item
                                         key={indexCell}
                                         className={classN('cell', {'active':itemCell === 1})}
                                         data-row={indexRow}
@@ -51,16 +55,17 @@ class TableContainer extends Component {
                                         onClick={this.onCellClick}
                                         >
                                             {itemCell}
-                                        </div>
+                                        </Grid>
                                     )
                                 })
                             }
-                        </div>)
+                        </Grid>)
                     })
                 }
-            </div>
+            </Grid>
+
         );
     }
 }
 
-export default TableContainer;
+export default Board;
