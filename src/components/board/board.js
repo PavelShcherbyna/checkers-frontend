@@ -39,7 +39,6 @@ class Board extends Component {
     }
     render() {
         return (
-
             <Grid container className={'board'}>
                 {
                     this.state.board.map((arrRow, indexRow) => {
@@ -63,7 +62,6 @@ class Board extends Component {
                     })
                 }
             </Grid>
-
         );
     }
 }

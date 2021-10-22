@@ -11,10 +11,10 @@ function MiddleMainBlock () {
               className="middle-main-block"
               direction="row"
               justifyContent="center"
-              alignItems="center">
-            <Grid item xs={1.2}><LeftNumbers /></Grid>
-            <Grid item xs={9.6}><Board /></Grid>
-            <Grid item xs={1.2}><div></div></Grid>
+              alignItems="stretch">
+            <Grid item xs={1}><LeftNumbers /></Grid>
+            <Grid item xs={10}><Board /></Grid>
+            <Grid item xs={1}><div></div></Grid>
         </Grid>
     )
 }

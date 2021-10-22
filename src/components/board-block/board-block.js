@@ -15,9 +15,9 @@ function BoardBlock () {
                       className='board-block-wrapper'
                       justifyContent="space-between"
                 >
-                    <Grid item xs={1.2}></Grid>
-                    <Grid item xs={9.6}><MiddleMainBlock /></Grid>
-                    <Grid item xs={1.2}><BottomLetters /></Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={10}><MiddleMainBlock /></Grid>
+                    <Grid item xs={1}><BottomLetters /></Grid>
                 </Grid>
             </Box>
 

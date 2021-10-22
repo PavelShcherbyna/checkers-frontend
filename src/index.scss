@@ -1,3 +1,21 @@
 body {
   margin: 0;
 }
+
+html {
+  font-size: 16px;
+
+  @media only screen and (max-width : 1920px) {}
+  @media only screen and (max-width : 1680px) {}
+  @media only screen and (max-width : 1366px) { font-size: 14px; }
+  @media only screen and (max-width : 1280px) {}
+  @media only screen and (max-width : 1024px) {}
+  @media only screen and (max-width : 800px)  {  }
+  @media only screen and (max-width : 768px)  { font-size: 10px; }
+  @media only screen and (max-width : 600px)  {}
+  @media only screen and (max-width : 533px)  { font-size: 7px; }
+  @media only screen and (max-width : 360px)  {}
+  @media only screen and (max-width : 320px)  { font-size: 5px; }
+  @media only screen and (max-width : 240px)  {}
+  @media only screen and (max-width : 176px)  {}
+}

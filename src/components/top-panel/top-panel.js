@@ -19,7 +19,7 @@ export default function TopPanel () {
                             <Button variant="contained" >Назад</Button>
                         </Grid>
                         <Grid item xs={4}>
-                            <Button variant="contained" color='error' >Сохранить</Button>
+                            <Button variant="contained" >Сохранить</Button>
                         </Grid>
                     </Grid>
                 </Toolbar>
