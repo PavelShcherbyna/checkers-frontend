@@ -3,10 +3,12 @@ import {AppBar} from "@mui/material";
 import {Toolbar} from "@mui/material";
 import {Grid} from "@mui/material";
 import {Button} from "@mui/material";
+import { connect } from "react-redux";
 
+import { createRandomCoords} from "../utils";
 import './top-panel.scss';
 
-const  TopPanel = ({onStartClick}) => {
+const  TopPanel = ({createRandomCoords}) => {
     
     return(
         
@@ -14,7 +16,7 @@ const  TopPanel = ({onStartClick}) => {
                 <Toolbar>
                     <Grid className="button-grid-container" container spacing={2}>
                         <Grid item xs={4}>
-                            <Button variant="contained" onClick={() => onStartClick()}>
+                            <Button variant="contained" onClick={createRandomCoords}>
                                 <span>Начать игру</span></Button>
                         </Grid>
                         <Grid item xs={4}>
@@ -30,4 +32,14 @@ const  TopPanel = ({onStartClick}) => {
     );
 }
 
-export default TopPanel;
+const mapStateToProps = () => {
+    return {};
+   }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        createRandomCoords: (payload) => dispatch({ type: 'CREATE_RND_POS', payload: createRandomCoords()})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopPanel);
