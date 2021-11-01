@@ -6,21 +6,18 @@ import "./bottom-letters.scss";
 
 class BottomLetters extends React.Component {
 
-    state = {lettersArr: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']};
+    state = {lettersArr: [null, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', null]};
 
     render() {
         return (
             <Grid container
                   spacing={0}
                   justifyContent="center"
-                // flexWrap="nowrap"
-
-                // justifyContent="flex-end"
                   className="bottom-letters"
             >
                 {this.state.lettersArr.map((letter, letterNum) => {
                     return (
-                        <Grid item xs={1.2} key={letterNum}>{letter}</Grid>
+                        <Grid item xs key={letterNum}>{letter}</Grid>
                     )
                 })
 
