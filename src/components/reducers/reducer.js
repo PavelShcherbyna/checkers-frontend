@@ -38,10 +38,18 @@ const reducer = (state = initialState, action) => {
                 const x = state.currWhiteCheckerPos[0];
                 const y = state.currWhiteCheckerPos[1];
 
-                if (board[x - 1][y - 1] !== undefined) {
+                if (board[x - 1] === undefined) {
+                    alert("У белой шашки закончились варианты хода!Ход передаётся чёрной шашке!");
+                    return{
+                        ...state,
+                        whiteIsNext: false
+                    }
+                }
+
+                if (board[x - 1] !== undefined && board[x - 1][y - 1] !== undefined) {
                     board[x - 1][y - 1].isTarget = board[x - 1][y - 1].hasChecker === null? !board[x - 1][y - 1].isTarget : false;
                 }
-                if (board[x - 1][y + 1] !== undefined) {
+                if (board[x - 1] !== undefined && board[x - 1][y + 1] !== undefined) {
                     board[x - 1][y + 1].isTarget = board[x - 1][y + 1].hasChecker === null? !board[x - 1][y + 1].isTarget : false;
                 }
                 return {
@@ -55,10 +63,18 @@ const reducer = (state = initialState, action) => {
                 const x = state.currBlackCheckerPos[0];
                 const y = state.currBlackCheckerPos[1];
 
-                if (board[x + 1][y - 1] !== undefined) {
+                if (board[x + 1] === undefined) {
+                    alert("У чёрной шашки закончились варианты хода! Ход передаётся белой шашке!");
+                    return{
+                        ...state,
+                        whiteIsNext: true
+                    }
+                }
+
+                if (board[x + 1] !== undefined && board[x + 1][y - 1] !== undefined) {
                     board[x + 1][y - 1].isTarget = board[x + 1][y - 1].hasChecker === null? !board[x + 1][y - 1].isTarget : false;
                 }
-                if (board[x + 1][y + 1] !== undefined) {
+                if (board[x + 1] !== undefined && board[x + 1][y + 1] !== undefined) {
                     board[x + 1][y + 1].isTarget = board[x + 1][y + 1].hasChecker === null? !board[x + 1][y + 1].isTarget : false;
                 }
                 return {
@@ -78,7 +94,7 @@ const reducer = (state = initialState, action) => {
                 const cellNumber = +cell;
                 const {board} = state;
 
-                if(state.whiteIsNext && state.whiteIsActive){
+                if(state.whiteIsNext && state.whiteIsActive && board[whitePos[0] - 1] !== undefined){
                     if( (board[rowNumber][cellNumber] === board[whitePos[0] - 1][whitePos[1] -1])
                             || (board[rowNumber][cellNumber] === board[whitePos[0] - 1][whitePos[1] +1]) ){
 
@@ -111,7 +127,7 @@ const reducer = (state = initialState, action) => {
                         }
                     }
                 }
-                if(!state.whiteIsNext && state.blackIsActive){
+                if(!state.whiteIsNext && state.blackIsActive && board[blackPos[0] + 1] !== undefined){
                     if( (board[rowNumber][cellNumber] === board[blackPos[0] + 1][blackPos[1] -1])
                         || (board[rowNumber][cellNumber] === board[blackPos[0] + 1][blackPos[1] +1]) ){
                             board.forEach((itemRow, indexRow) => {
