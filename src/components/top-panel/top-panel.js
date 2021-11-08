@@ -5,10 +5,11 @@ import {Grid} from "@mui/material";
 import {Button} from "@mui/material";
 import { connect } from "react-redux";
 
-import { createRandomCoords} from "../utils";
+import { createRandomCoords } from "../utils";
 import './top-panel.scss';
+import {  CREATE_RND_POS, MOVE_BACK } from '../actions';
 
-const  TopPanel = ({createRandomCoords}) => {
+const  TopPanel = ({CREATE_RND_POS, MOVE_BACK}) => {
     
     return(
         
@@ -16,11 +17,11 @@ const  TopPanel = ({createRandomCoords}) => {
                 <Toolbar>
                     <Grid className="button-grid-container" container spacing={2}>
                         <Grid item xs={4}>
-                            <Button variant="contained" onClick={createRandomCoords}>
+                            <Button variant="contained" onClick={() => CREATE_RND_POS(createRandomCoords())}>
                                 <span>Начать игру</span></Button>
                         </Grid>
                         <Grid item xs={4}>
-                            <Button variant="contained" >Назад</Button>
+                            <Button variant="contained" onClick={MOVE_BACK}>Назад</Button>
                         </Grid>
                         <Grid item xs={4}>
                             <Button variant="contained" >Сохранить</Button>
@@ -36,10 +37,16 @@ const mapStateToProps = () => {
     return {};
    }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        createRandomCoords: (payload) => dispatch({ type: 'CREATE_RND_POS', payload: createRandomCoords()})
-    }
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         createRandomCoords: () => dispatch({ type: 'CREATE_RND_POS', payload: createRandomCoords() }),
+//         moveBack: () => dispatch({ type: 'MOVE_BACK'})
+//     }
+// }
+
+const mapDispatchToProps = {
+    CREATE_RND_POS,
+    MOVE_BACK
+  }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopPanel);
