@@ -56,14 +56,6 @@ const mapStateToProps = ({ board, whiteIsActive, blackIsActive }) => {
   return { board, whiteIsActive, blackIsActive };
 };
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     onCheckerClick: (event) =>
-//       dispatch({ type: "ON_CHACKER_CLICK", payload: event }),
-//     onCellClick: (event) => dispatch({ type: "ON_CELL_CLICK", payload: event }),
-//   };
-// };
-
 const mapDispatchToProps = {
   ON_CELL_CLICK,
   ON_CHACKER_CLICK

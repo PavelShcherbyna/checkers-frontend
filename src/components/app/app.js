@@ -9,12 +9,6 @@ import BoardBlock from "../board-block";
 import PaperContainer from "../paper-container";
 
 export default class App extends Component {
-  state = {};
-
-  onStartClick = () => {
-    console.log("Start Game!");
-  };
-
   render() {
     return (
       <>
@@ -28,10 +22,10 @@ export default class App extends Component {
             <TopPanel onStartClick={this.onStartClick} />
             <Container>
               <div className="main-container">
-                <BoardBlock />
-                <PaperContainer />
-              </div>
-            </Container>
+              <BoardBlock />
+              <PaperContainer />
+              </div>          
+            </Container>       
           </Stack>
         </Box>
       </>
