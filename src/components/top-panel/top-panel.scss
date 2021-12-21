@@ -1,7 +1,28 @@
-.top-panel button{
+.top-panel button {
   width: 100%;
 }
 
 .button-grid-container {
- button {font-size: 1rem;}
+  button {
+    font-size: 1rem;
+  }
+}
+
+.account-info-not-login {
+  align-items: flex-end;
+  a {
+    padding-left: 0.5rem;
+    font-size: 1rem;
+    text-decoration: none;
+    color: black;
+  }
+}
+.account-info {
+  align-items: flex-end;
+  a {
+    padding-left: 0.5rem;
+    font-size: 1rem;
+    text-decoration: none;
+    color: black;
+  }
 }

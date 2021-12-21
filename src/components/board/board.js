@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import WhiteChecker from "../white-checker";
 import BlackChecker from "../black-checker";
-import { ON_CELL_CLICK, ON_CHACKER_CLICK } from '../actions';
+import { ON_CELL_CLICK, ON_CHACKER_CLICK } from "../actions";
 
 import "./board.scss";
 
@@ -58,7 +58,7 @@ const mapStateToProps = ({ board, whiteIsActive, blackIsActive }) => {
 
 const mapDispatchToProps = {
   ON_CELL_CLICK,
-  ON_CHACKER_CLICK
-}
+  ON_CHACKER_CLICK,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);
