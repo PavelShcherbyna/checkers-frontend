@@ -1,6 +1,13 @@
 import { createReducer } from "redux-act";
-import { ON_CELL_CLICK, ON_CHACKER_CLICK, CREATE_RND_POS, MOVE_BACK, FETCH_USER_DATA } from "../actions";
-
+import {
+  ON_CELL_CLICK,
+  ON_CHACKER_CLICK,
+  CREATE_RND_POS,
+  MOVE_BACK,
+  SAVE_USER_DATA,
+  DELETE_USER_DATA,
+  LOAD_HISTORY_OF_MOVES,
+} from "../actions";
 import createBoard from "../utils/createBoard";
 
 const initialState = () => ({
@@ -16,35 +23,33 @@ const initialState = () => ({
 
 const reducer = createReducer(
   {
-    [CREATE_RND_POS]: (store, payload) => {
+    [LOAD_HISTORY_OF_MOVES]: (store, payload) => {
       let newArr = createBoard();
       const loadedHistory = store.currentUser.historyOfMoves;
-      if (loadedHistory && loadedHistory.length > 0) {
-        // eslint-disable-next-line no-restricted-globals
-        const isSaveLoad = confirm("У вас есть сохранённая игра, загрузить сохранение?");
-        if (isSaveLoad) {
-          const lastSavedMove = loadedHistory[loadedHistory.length - 1];
-          newArr[lastSavedMove.blackX][lastSavedMove.blackY].hasChecker = "black";
-          newArr[lastSavedMove.whiteX][lastSavedMove.whiteY].hasChecker = "white";
-
-          const turn = lastSavedMove.type === "black" ? true : false;
-          return {
-            ...store,
-            board: [...newArr],
-            historyOfMoves: loadedHistory,
-            currWhiteCheckerPos: [lastSavedMove.whiteX, lastSavedMove.whiteY],
-            currBlackCheckerPos: [lastSavedMove.blackX, lastSavedMove.blackY],
-            whiteIsNext: turn,
-          };
-        }
+      const lastSavedMove = loadedHistory[loadedHistory.length - 1];
+      newArr[lastSavedMove.blackX][lastSavedMove.blackY].hasChecker = "black";
+      newArr[lastSavedMove.whiteX][lastSavedMove.whiteY].hasChecker = "white";
+      let turn = true;
+      
+      if (lastSavedMove.type) {
+        turn = lastSavedMove.type === "black" ? true : false;
       }
+
+      return {
+        ...store,
+        board: [...newArr],
+        historyOfMoves: [...loadedHistory],
+        whiteIsNext: turn,
+      };
+    },
+    [CREATE_RND_POS]: (store, payload) => {
+      let newArr = createBoard();
       newArr[payload[0].x][payload[0].y].hasChecker = "black";
       newArr[payload[1].x][payload[1].y].hasChecker = "white";
+
       return {
         ...store,
         board: newArr,
-        // currWhiteCheckerPos: [action.payload[1].x, action.payload[1].y],
-        // currBlackCheckerPos: [action.payload[0].x, action.payload[0].y],
         whiteIsNext: true,
         historyOfMoves: [
           {
@@ -157,10 +162,11 @@ const reducer = createReducer(
         const previousMove = store.historyOfMoves[store.historyOfMoves.length - 1];
 
         if (store.whiteIsNext && store.whiteIsActive && board[whitePos[0] - 1] !== undefined) {
-          if (
-            board[rowNumber][cellNumber] === board[whitePos[0] - 1][whitePos[1] - 1] ||
-            board[rowNumber][cellNumber] === board[whitePos[0] - 1][whitePos[1] + 1]
-          ) {
+          // if (
+          //   board[rowNumber][cellNumber] === board[whitePos[0] - 1][whitePos[1] - 1] ||
+          //   board[rowNumber][cellNumber] === board[whitePos[0] - 1][whitePos[1] + 1]
+          // )
+          if (board[rowNumber][cellNumber].isTarget) {
             let fromX = numbers[whitePos[0]];
             let fromY = letters[whitePos[1]];
             newHistory.push({
@@ -175,22 +181,12 @@ const reducer = createReducer(
             board.forEach((itemRow, indexRow) => {
               itemRow.forEach((itemCell, indexCell) => {
                 board[indexRow][indexCell].isTarget = false;
-              });
-            });
-            board.forEach((itemRow, indexRow) => {
-              itemRow.forEach((itemCell, indexCell) => {
                 if (board[indexRow][indexCell].hasChecker === "white") {
                   board[indexRow][indexCell].hasChecker = null;
                 }
               });
             });
-            board.forEach((itemRow, indexRow) => {
-              itemRow.forEach((itemCell, indexCell) => {
-                if (indexRow === rowNumber && indexCell === cellNumber) {
-                  board[indexRow][indexCell].hasChecker = "white";
-                }
-              });
-            });
+            board[rowNumber][cellNumber].hasChecker = "white";
 
             return {
               ...store,
@@ -203,10 +199,11 @@ const reducer = createReducer(
           }
         }
         if (!store.whiteIsNext && store.blackIsActive && board[blackPos[0] + 1] !== undefined) {
-          if (
-            board[rowNumber][cellNumber] === board[blackPos[0] + 1][blackPos[1] - 1] ||
-            board[rowNumber][cellNumber] === board[blackPos[0] + 1][blackPos[1] + 1]
-          ) {
+          // if (
+          //   board[rowNumber][cellNumber] === board[blackPos[0] + 1][blackPos[1] - 1] ||
+          //   board[rowNumber][cellNumber] === board[blackPos[0] + 1][blackPos[1] + 1]
+          // )
+          if (board[rowNumber][cellNumber].isTarget) {
             let fromX = numbers[blackPos[0]];
             let fromY = letters[blackPos[1]];
             newHistory.push({
@@ -221,22 +218,12 @@ const reducer = createReducer(
             board.forEach((itemRow, indexRow) => {
               itemRow.forEach((itemCell, indexCell) => {
                 board[indexRow][indexCell].isTarget = false;
-              });
-            });
-            board.forEach((itemRow, indexRow) => {
-              itemRow.forEach((itemCell, indexCell) => {
                 if (board[indexRow][indexCell].hasChecker === "black") {
                   board[indexRow][indexCell].hasChecker = null;
                 }
               });
             });
-            board.forEach((itemRow, indexRow) => {
-              itemRow.forEach((itemCell, indexCell) => {
-                if (indexRow === rowNumber && indexCell === cellNumber) {
-                  board[indexRow][indexCell].hasChecker = "black";
-                }
-              });
-            });
+            board[rowNumber][cellNumber].hasChecker = "black";
 
             return {
               ...store,
@@ -257,11 +244,13 @@ const reducer = createReducer(
       const historyOfMoves = store.historyOfMoves;
       const currentBoard = store.board;
       const movesLength = historyOfMoves.length;
+      let turn = true;
       if (historyOfMoves.length > 1) {
         const stepBack = historyOfMoves[movesLength - 2];
 
         currentBoard.forEach((itemRow, indexRow) => {
           itemRow.forEach((itemCell, indexCell) => {
+            currentBoard[indexRow][indexCell].isTarget = false;
             if (currentBoard[indexRow][indexCell].hasChecker === "black") {
               currentBoard[indexRow][indexCell].hasChecker = null;
             }
@@ -272,10 +261,10 @@ const reducer = createReducer(
         });
         currentBoard[stepBack.blackX][stepBack.blackY].hasChecker = "black";
         currentBoard[stepBack.whiteX][stepBack.whiteY].hasChecker = "white";
+        if (stepBack.type) {
+          turn = stepBack.type === "black" ? true : false;
+        }
 
-        const turn = stepBack.type === "black" ? true : false;
-
-        //console.log(currentBoard)
         return {
           ...store,
           board: [...currentBoard],
@@ -283,14 +272,15 @@ const reducer = createReducer(
           currWhiteCheckerPos: [stepBack.whiteX, stepBack.whiteY],
           currBlackCheckerPos: [stepBack.blackX, stepBack.blackY],
           whiteIsNext: turn,
+          whiteIsActive: false,
+          blackIsActive: false,
         };
       }
       return {
         ...store,
       };
     },
-    [FETCH_USER_DATA]: (store, payload) => {
-      console.log(payload);
+    [SAVE_USER_DATA]: (store, payload) => {
       if (payload) {
         return {
           ...store,
@@ -299,6 +289,12 @@ const reducer = createReducer(
       }
       return {
         ...store,
+      };
+    },
+    [DELETE_USER_DATA]: (store) => {
+      return {
+        ...store,
+        currentUser: {},
       };
     },
   },

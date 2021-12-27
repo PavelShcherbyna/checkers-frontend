@@ -3,75 +3,44 @@ import { AppBar, Toolbar, Grid, Button, Typography } from "@mui/material";
 import { connect } from "react-redux";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { createRandomCoords } from "../utils";
-import { CREATE_RND_POS, MOVE_BACK, FETCH_USER_DATA } from "../actions";
+import { createRandomCoords, saveMyHistory } from "../utils";
+import {
+  CREATE_RND_POS,
+  MOVE_BACK,
+  FETCH_USER_DATA,
+  DELETE_USER_DATA,
+  LOAD_HISTORY_OF_MOVES,
+} from "../actions";
 import { Link } from "react-router-dom";
 
 import "./top-panel.scss";
 
-const getMyInfo = async () => {
-  try {
-    let responce = await fetch("http://localhost:3030/users/me", {
-      headers: {
-        authorization: `Bearer ${localStorage.getItem("JWT")}`,
-      },
-      credentials: "include",
-      method: "GET",
-    });
-    let result = await responce.json();
-    if (result.status === "success") {
-      return result;
-    } else {
-      console.log("getMyInfo Eroor:", result.message);
-    }
-  } catch (err) {
-    console.log("Поймана ошибка:", err.message);
-    //alert("О нет, только не это! Что-то явно пошло не так...");
-  }
-};
-
 class TopPanel extends Component {
   componentDidMount() {
-    getMyInfo().then((userData) => {
-      this.props.FETCH_USER_DATA(userData);
-    });
+    this.props.FETCH_USER_DATA();
   }
+
   render() {
-    const { CREATE_RND_POS, MOVE_BACK, currentUser, historyOfMoves } = this.props;
+    const {
+      CREATE_RND_POS,
+      MOVE_BACK,
+      currentUser,
+      historyOfMoves,
+      DELETE_USER_DATA,
+      LOAD_HISTORY_OF_MOVES,
+    } = this.props;
     const displayNotLogin = !currentUser.name ? "flex" : "none";
     const displayLogin = currentUser.name ? "flex" : "none";
 
-    const saveMyHistory = async () => {
-      const dataObject = {
-        historyOfMoves: historyOfMoves,
-      };
-      const data = JSON.stringify(dataObject);
-      try {
-        let responce = await fetch("http://localhost:3030/users/saveMyHistory", {
-          headers: {
-            authorization: `Bearer ${localStorage.getItem("JWT")}`,
-          },
-          credentials: "include",
-          method: "PATCH",
-          body: data,
-        });
-        let result = await responce.json();
-        if (result.status === "success") {
-          alert("Ваша история ходов сохранена");
-        } else {
-          if (result.message && result.message === "jwt expired") {
-            alert("Срок авторизации вышел! Пожалуйста, войдите заново в Ваш аккаунт, что бы сохранить игру.");
-          }
-          // alert(result.message);
-        }
-      } catch (err) {
-        console.log(err.message);
-        if (err.message.includes("Failed to fetch")) {
-          alert("Сервер не отвечает. Проверьте сетевое подключение.");
-        } else {
-          alert("Непредвиденная ошибка!");
+    const startGameHandler = () => {
+      const loadedHistory = currentUser.historyOfMoves;
+      if (loadedHistory && loadedHistory.length > 0) {
+        // eslint-disable-next-line no-restricted-globals
+        if (confirm("У вас есть сохранённая игра, загрузить сохранение?")) {
+          return LOAD_HISTORY_OF_MOVES();
         }
       }
+      return CREATE_RND_POS(createRandomCoords());
     };
 
     return (
@@ -90,12 +59,14 @@ class TopPanel extends Component {
               <Typography className="account-info" component="div" sx={{ display: displayLogin }}>
                 <HowToRegIcon sx={{ fontSize: "2rem", color: "green" }} />
                 <span>{`${currentUser.name}`}</span>
-                <Link to="/login">Выйти</Link>
+                <Link to="/login" onClick={DELETE_USER_DATA}>
+                  Выйти
+                </Link>
               </Typography>
             </Grid>
 
             <Grid item xs={3}>
-              <Button variant="contained" onClick={() => CREATE_RND_POS(createRandomCoords())}>
+              <Button variant="contained" onClick={startGameHandler}>
                 <span>Начать игру</span>
               </Button>
             </Grid>
@@ -105,7 +76,7 @@ class TopPanel extends Component {
               </Button>
             </Grid>
             <Grid item xs={3}>
-              <Button variant="contained" onClick={saveMyHistory}>
+              <Button variant="contained" onClick={() => saveMyHistory(historyOfMoves)}>
                 Сохранить
               </Button>
             </Grid>
@@ -131,6 +102,8 @@ const mapDispatchToProps = {
   CREATE_RND_POS,
   MOVE_BACK,
   FETCH_USER_DATA,
+  DELETE_USER_DATA,
+  LOAD_HISTORY_OF_MOVES,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopPanel);

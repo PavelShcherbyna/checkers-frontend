@@ -3,18 +3,17 @@ import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Containe
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link, useNavigate } from "react-router-dom";
 
-//import CaptionTipography from "../caption-tipography";
 import Copyright from "../copyright";
 
 import "./sign-up.scss";
 
 export default function SignUp() {
-  //const [caption, setCaption] = useState("");
   const [captName, setCaptName] = useState("");
   const [captEmail, setCaptEmail] = useState("");
   const [captPass, setCaptPass] = useState("");
   const [captPassConfirm, setCaptPassConfirm] = useState("");
   let navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -38,30 +37,11 @@ export default function SignUp() {
         alert(`Поздравляю тебя, ${result.data.user.name}, ты успешно зарегистрирован(а)!`);
 
         localStorage.setItem("JWT", result.token);
-        //document.cookie = `manuallyCreatedCookie=${token}`;
         navigate("/");
       } else {
-        //alert(result.message);
-        // if (result.message.startsWith("User validation failed")) {
-        //   let combinedCaption = "Вы ввели неверные данные!";
-        //   if (result.message.includes("name:")) {
-        //     combinedCaption += " Пожалуйста, укажите своё имя!";
-        //   }
-        //   if (result.message.includes("email:")) {
-        //     combinedCaption += " Пожалуйста, укажите e-mail!";
-        //   }
-        //   if (result.message.includes("password:")) {
-        //     combinedCaption += " Пожалуйста, укажите пароль!";
-        //   }
-        //   if (result.message.includes("passwordConfirm:")) {
-        //     combinedCaption += " Пароли не совпадают!";
-        //   }
-        //   setCaption(combinedCaption);'Имя не содержит букв!'
-        // }
         if (result.message.startsWith("User validation failed")) {
-          // setCaption("Вы ввели неверные данные!");
           if (result.message.includes("name:")) {
-            if (result.message.includes("name: Path `name`")) {
+            if (result.message.includes("Имя должно содержать больше одного символа")) {
               setCaptName("Имя должно быть длиннее одного символа");
             } else if (result.message.includes("Имя не содержит букв!")) {
               setCaptName("Имя должно содержать хотя бы одну букву!");
@@ -72,12 +52,20 @@ export default function SignUp() {
             setCaptName("");
           }
           if (result.message.includes("email:")) {
-            setCaptEmail("Пожалуйста, укажите e-mail");
+            if (result.message.includes("Пожалуйста, укажите e-mail.")) {
+              setCaptEmail("Пожалуйста, укажите e-mail");
+            } else if (result.message.includes("Пожалуйста, укажите корректный e-mail.")) {
+              setCaptEmail("Пожалуйста, укажите корректный e-mail.");
+            }
           } else {
             setCaptEmail("");
           }
           if (result.message.includes("password:")) {
-            setCaptPass("Пожалуйста, укажите пароль");
+            if (result.message.includes("Пожалуйста, укажите пароль.")) {
+              setCaptPass("Пожалуйста, укажите пароль");
+            } else if (result.message.includes("Пароль должен быть длиннее 8 символов.")) {
+              setCaptPass("Пароль слишком короткий. Придумайте пароль длиннее восьми символов.");
+            }
           } else {
             setCaptPass("");
           }
@@ -116,7 +104,6 @@ export default function SignUp() {
             <Grid item xs={12}>
               <TextField
                 className="signup-inputs"
-                autoComplete="given-name"
                 name="name"
                 required
                 fullWidth
@@ -134,7 +121,6 @@ export default function SignUp() {
                 id="email"
                 label="Email адрес"
                 name="email"
-                autoComplete="email"
                 helperText={captEmail}
               />
             </Grid>
@@ -147,7 +133,6 @@ export default function SignUp() {
                 label="Пароль"
                 type="password"
                 id="password"
-                autoComplete="new-password"
                 helperText={captPass}
               />
             </Grid>
@@ -160,12 +145,10 @@ export default function SignUp() {
                 label="Подтверждение пароля"
                 type="password"
                 id="passwordConfirm"
-                autoComplete="new-password"
                 helperText={captPassConfirm}
               />
             </Grid>
           </Grid>
-          {/* <CaptionTipography caption={caption} /> */}
 
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Зарегистрироваться

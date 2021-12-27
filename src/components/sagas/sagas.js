@@ -1,22 +1,18 @@
-//import { put, takeLatest } from "redux-saga/effects";
+import { put, call, takeEvery } from "redux-saga/effects";
+import { SAVE_USER_DATA } from "../actions";
+import { getMyInfo } from "../utils";
 
-// let responce = await fetch("http://localhost:3030/users/me", {
-//         credentials: "include",
-//         method: "GET",
-//       });
+function* fetchUser() {
+  const data = yield call(getMyInfo);
 
-//       let result = await responce.json();
-//       console.log(result);
+  yield put(SAVE_USER_DATA(data));
+}
 
-// function* fetchUsers() {
-//   const userData = yield fetch("http://localhost:3030/users/me", {
-//     credentials: "include",
-//     method: "GET",
-//   });
-//   const userDataJSON = yield userData.json();
-//   yield put({ type: "FETCH_USER_DATA", userDataJSON });
-// }
+function deleteUser() {
+  localStorage.removeItem("JWT");
+}
 
 export default function* rootSaga() {
-  //   yield takeLatest("FETCH_USER_DATA", fetchUsers);
+  yield takeEvery("FETCH_USER_DATA", fetchUser);
+  yield takeEvery("DELETE_USER_DATA", deleteUser);
 }
