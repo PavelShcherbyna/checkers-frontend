@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link, useNavigate } from "react-router-dom";
+import CaptionTipography from "../caption-tipography";
 
 import Copyright from "../copyright";
 
 import "./sign-up.scss";
 
 export default function SignUp() {
+  const [caption, setCaption] = useState("");
   const [captName, setCaptName] = useState("");
   const [captEmail, setCaptEmail] = useState("");
   const [captPass, setCaptPass] = useState("");
@@ -77,8 +79,12 @@ export default function SignUp() {
         }
       }
     } catch (err) {
-      console.log("Поймана ошибка:", err);
-      alert("О нет, только не это! Что-то явно пошло не так...");
+      if (err.message.includes("Failed to fetch")) {
+        setCaption("Сервер не отвечает. Проверьте сетевое подключение.");
+      } else {
+        console.log("Поймана ошибка:", err);
+        setCaption("Непредвиденная ошибка!");
+      }
     }
   };
 
@@ -149,6 +155,7 @@ export default function SignUp() {
               />
             </Grid>
           </Grid>
+          <CaptionTipography caption={caption} />
 
           <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Зарегистрироваться

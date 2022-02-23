@@ -37,7 +37,6 @@ export default function SignIn() {
       }
     } catch (err) {
       console.log("Поймана ошибка:", err);
-      //alert("О нет, только не это! Что-то явно пошло не так...");
       if (err.message.includes("Failed to fetch")) {
         setCaption("Сервер не отвечает. Проверьте сетевое подключение.");
       } else {

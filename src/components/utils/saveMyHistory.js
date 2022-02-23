@@ -19,8 +19,13 @@ const saveMyHistory = async (historyOfMoves) => {
       if (result.message && result.message === "jwt expired") {
         alert("Срок авторизации вышел! Пожалуйста, войдите заново в Ваш аккаунт, что бы сохранить игру.");
       }
-      if (result.message && result.message === "jwt malformed") {
+      if (result.message && result.message.includes("Вы не авторизованы!")) {
         alert("Что бы сохранить игру, вам нужно войти.");
+      }
+      if (result.message && result.message === "Пользователь, получивший этот токен, больше не существует.") {
+        alert("Пользователь, получивший этот токен, больше не существует.");
+      } else {
+        console.log(result.message);
       }
       // alert(result.message);
     }

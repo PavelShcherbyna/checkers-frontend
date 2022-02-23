@@ -10,12 +10,13 @@ const getMyInfo = async () => {
     let result = await responce.json();
     if (result.status === "success") {
       return result;
+    } else if (result.message && result.message === "jwt expired") {
+      localStorage.removeItem("JWT");
     } else {
       console.log("getMyInfo Eroor:", result.message);
     }
   } catch (err) {
     console.log("Поймана ошибка:", err.message);
-    //alert("О нет, только не это! Что-то явно пошло не так...");
   }
 };
 
